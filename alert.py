@@ -28,17 +28,36 @@ prev = df.iloc[-2]
 
 # --- SMA-10 CROSS ---
 if cur["Close"] > cur["SMA10"] and prev["Close"] <= prev["SMA10"]:
-    send("🔔 Silver crossed ABOVE 10-day SMA")
+    send(
+    f"📉 Silver BELOW 10-day SMA\n"
+    f"Price: {cur['Close']:.2f}\n"
+    f"SMA-10: {cur['SMA10']:.2f}"
+)
+
 
 if cur["Close"] < cur["SMA10"] and prev["Close"] >= prev["SMA10"]:
-    send("🔔 Silver crossed BELOW 10-day SMA")
+    send(
+    f"📉 Silver BELOW 10-day SMA\n"
+    f"Price: {cur['Close']:.2f}\n"
+    f"SMA-10: {cur['SMA10']:.2f}"
+)
+
 
 # --- SMA-20 CROSS ---
 if cur["Close"] > cur["SMA20"] and prev["Close"] <= prev["SMA20"]:
-    send("🔔 Silver crossed ABOVE 20-day SMA")
+    send(
+    f"📉 Silver BELOW 20-day SMA\n"
+    f"Price: {cur['Close']:.2f}\n"
+    f"SMA-10: {cur['SMA10']:.2f}"
+)
 
 if cur["Close"] < cur["SMA20"] and prev["Close"] >= prev["SMA20"]:
-    send("🔔 Silver crossed BELOW 20-day SMA")
+   send(
+    f"📉 Silver BELOW 20-day SMA\n"
+    f"Price: {cur['Close']:.2f}\n"
+    f"SMA-10: {cur['SMA10']:.2f}"
+)
+
     
 # --- CUSTOM PRICE ALERT ---
 if TARGET_PRICE > 0:
@@ -47,3 +66,14 @@ if TARGET_PRICE > 0:
 
     if prev["Close"] < TARGET_PRICE and cur["Close"] >= TARGET_PRICE:
         send(f"🎯 Silver hit ABOVE your target price: {TARGET_PRICE}\nCurrent: {cur['Close']:.2f}")
+
+# --- TREND REVERSAL ---
+prev_trend = "UP" if prev["Close"] > df.iloc[-3]["Close"] else "DOWN"
+cur_trend = "UP" if cur["Close"] > prev["Close"] else "DOWN"
+
+if prev_trend == "DOWN" and cur_trend == "UP":
+    send(f"🔄 Bullish trend reversal detected\nPrice: {cur['Close']:.2f}")
+
+if prev_trend == "UP" and cur_trend == "DOWN":
+    send(f"🔄 Bearish trend reversal detected\nPrice: {cur['Close']:.2f}")
+
