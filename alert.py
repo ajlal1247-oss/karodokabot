@@ -1,6 +1,7 @@
 import yfinance as yf
 import requests
 import os
+TARGET_PRICE = float(os.environ.get("TARGET_PRICE", "0"))
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
@@ -38,3 +39,11 @@ if cur["Close"] > cur["SMA20"] and prev["Close"] <= prev["SMA20"]:
 
 if cur["Close"] < cur["SMA20"] and prev["Close"] >= prev["SMA20"]:
     send("🔔 Silver crossed BELOW 20-day SMA")
+    
+# --- CUSTOM PRICE ALERT ---
+if TARGET_PRICE > 0:
+    if prev["Close"] > TARGET_PRICE and cur["Close"] <= TARGET_PRICE:
+        send(f"🎯 Silver hit BELOW your target price: {TARGET_PRICE}\nCurrent: {cur['Close']:.2f}")
+
+    if prev["Close"] < TARGET_PRICE and cur["Close"] >= TARGET_PRICE:
+        send(f"🎯 Silver hit ABOVE your target price: {TARGET_PRICE}\nCurrent: {cur['Close']:.2f}")
